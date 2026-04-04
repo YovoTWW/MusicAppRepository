@@ -1,0 +1,96 @@
+﻿@using MusicApp.ViewModels
+@using static MusicApp.Constants.Genres;
+
+@model IEnumerable<BasicSongViewModel>
+
+@{
+    string searchTextName = ViewData["SearchTextName"] as string ?? string.Empty;
+    ViewData["Title"] = "Songs List";
+}
+
+<form method="get" class="mb-4" id="filters">
+    <div class="row mb-2">
+        <div class="col">
+            <input type="text"
+                   name="searchTextName"
+                   class="form-control"
+                   placeholder="Search by Title"
+                   value="@searchTextName">
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <h5>Genres</h5>
+        @{
+            var genres = MusicGenres;      
+        }
+
+        @foreach (var genre in genres)
+        {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="GenreFilters"
+                       value="@genre"
+                       id="genre_@genre"
+                @(ViewData["GenreFilters"] is List<string> selectedGenres && selectedGenres.Contains(genre) ? "checked" : "") />
+
+                <label class="form-check-label" for="genre_@genre">@genre</label>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">
+        Apply Filters
+    </button>
+</form>
+
+<hr />
+
+<div class="Song-Row">
+    @foreach (var song in Model)
+    {
+        <div class="Song-Box">
+            <div class="card">
+
+                @if (!string.IsNullOrEmpty(song.ImageURL))
+                {
+                    <img src="@song.ImageURL" class="card-img-top" alt="@song.Title">
+                }
+                else
+                {
+                    <img src="~/img/no-image-available-02.jpg" class="card-img-top" alt="No Image Available">
+                }
+
+                <div class="card-body">
+                    <h5 class="card-title">@song.Title</h5>
+
+                    <p class="card-text">
+                        <strong>Artist:</strong> @song.Creator
+                    </p>
+
+                    <p class="card-text">
+                        <strong>Genre:</strong> @song.Genre
+                    </p>
+
+                    <p class="card-text">
+                        <strong>Year:</strong> @song.YearReleased
+                    </p>
+
+                    <p class="card-text">
+                        <strong>Duration:</strong> @(song.Duration / 60)m @(song.Duration % 60)s
+                    </p>
+
+                    <div class="Buttons-Div">
+                        <a asp-controller="Home"
+                           asp-action="Details"
+                           asp-route-id="@song.Id"
+                           class="btn btn-info">
+                            Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
