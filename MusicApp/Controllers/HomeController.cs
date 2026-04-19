@@ -112,6 +112,51 @@ namespace MusicApp.Controllers
             return this.View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var model = await dbContext.Songs.Where(p => p.Id == id).AsNoTracking().Select(p => new AddSongViewModel
+            {
+                ImageURL = p.ImageURL,
+                Title = p.Title,
+                Duration = p.Duration,
+                YearReleased = p.YearReleased,
+                Genre = p.Genre,
+                Creator = p.Creator
+            }).FirstOrDefaultAsync();
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(AddSongViewModel model , Guid id)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+
+            Song? song = await dbContext.Songs.FindAsync(id);
+
+            if (song == null)
+            {
+                throw new ArgumentException("Invalid id");
+            }
+
+
+            song.Title = model.Title;
+            song.Creator = model.Creator;
+            song.Duration = model.Duration;
+            song.YearReleased = model.YearReleased;
+            song.Genre = model.Genre;
+            song.ImageURL = model.ImageURL;
+            
+            await dbContext.SaveChangesAsync();
+
+            return this.RedirectToAction("Index");
+        }
+
         public IActionResult Privacy()
         {
             return View();

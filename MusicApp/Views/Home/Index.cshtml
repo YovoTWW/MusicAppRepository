@@ -8,6 +8,12 @@
     ViewData["Title"] = "Songs List";
 }
 
+<link rel="stylesheet" href="~/css/card.css" />
+
+<div>
+    <button><a asp-controller="Home" asp-action="Add">Add a new Song</a></button>
+</div>
+
 <form method="get" class="mb-4" id="filters">
     <div class="row mb-2">
         <div class="col">
@@ -24,7 +30,7 @@
         @{
             var genres = MusicGenres;      
         }
-
+        
         @foreach (var genre in genres)
         {
             <div class="form-check form-check-inline">
@@ -52,16 +58,6 @@
     {
         <div class="Song-Box">
             <div class="card">
-
-                @if (!string.IsNullOrEmpty(song.ImageURL))
-                {
-                    <img src="@song.ImageURL" class="card-img-top" alt="@song.Title">
-                }
-                else
-                {
-                    <img src="~/img/no-image-available-02.jpg" class="card-img-top" alt="No Image Available">
-                }
-
                 <div class="card-body">
                     <h5 class="card-title">@song.Title</h5>
 
@@ -88,7 +84,23 @@
                            class="btn btn-info">
                             Details
                         </a>
+                        <a asp-controller="Home"
+                           asp-action="Edit"
+                           asp-route-id="@song.Id"
+                           class="btn btn-info">
+                            Edit
+                        </a>
                     </div>
+                </div>
+                <div class="card-image">
+                @if (!string.IsNullOrEmpty(song.ImageURL))
+                {
+                    <img src="@song.ImageURL" class="card-img-top" alt="No Image Available">
+                }
+                else
+                {
+                    <img src="~/img/no-image-available-02.jpg" class="card-img-top" alt="No Image Available">
+                }
                 </div>
             </div>
         </div>

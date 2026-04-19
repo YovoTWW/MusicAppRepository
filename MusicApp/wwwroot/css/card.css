@@ -1,0 +1,33 @@
+.Song-Row {
+    display: flex;
+    flex-direction: row;
+    gap:50px;
+    flex-wrap:wrap;
+}
+
+.Song-Box {
+    max-width: 620px;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height:350px;
+    width:600px;
+}
+
+.card-body{
+    flex-grow:1;
+}
+
+.card-image{
+    flex-grow:2;
+}
+
+.card-image, img {
+    width: 350px;
+    height: 350px;
+    object-fit: contain;
+}
