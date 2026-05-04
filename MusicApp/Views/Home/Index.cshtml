@@ -5,13 +5,14 @@
 
 @{
     string searchTextName = ViewData["SearchTextName"] as string ?? string.Empty;
+    string searchTextCreator = ViewData["SearchTextCreator"] as string ?? string.Empty;
     ViewData["Title"] = "Songs List";
 }
 
 <link rel="stylesheet" href="~/css/card.css" />
 
 <div>
-    <button><a asp-controller="Home" asp-action="Add">Add a new Song</a></button>
+    <button><a asp-controller="Home" asp-action="Add" class="btn btn-info" >Add a new Song</a></button>
 </div>
 
 <form method="get" class="mb-4" id="filters">
@@ -20,8 +21,29 @@
             <input type="text"
                    name="searchTextName"
                    class="form-control"
-                   placeholder="Search by Title"
+                   placeholder="Filter by Title"
                    value="@searchTextName">
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            <input type="text"
+                   name="searchTextCreator"
+                   class="form-control"
+                   placeholder="Filter by Creator"
+                   value="@searchTextCreator">
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            <input type="number"
+                   step="1" min="0"
+                   name="YearFilters"
+                   class="form-control"
+                   placeholder="Filter by Rlease Year"
+                   value="@searchTextCreator">
         </div>
     </div>
 
@@ -78,10 +100,9 @@
                     </p>
 
                     <div class="Buttons-Div">
-                        <a asp-controller="Home"
-                           asp-action="Details"
-                           asp-route-id="@song.Id"
-                           class="btn btn-info">
+                        <a href="@song.WikiURL"
+                           class="btn btn-info"
+                           onclick="return checkUrl(@Html.Raw(Json.Serialize(song.WikiURL)))">
                             Details
                         </a>
                         <a asp-controller="Home"
@@ -89,6 +110,11 @@
                            asp-route-id="@song.Id"
                            class="btn btn-info">
                             Edit
+                        </a>
+                        <a href="@song.PlayURL"
+                           class="btn btn-info"
+                           onclick="return checkUrl(@Html.Raw(Json.Serialize(song.PlayURL)))">
+                            Play Song
                         </a>
                     </div>
                 </div>
@@ -106,3 +132,13 @@
         </div>
     }
 </div>
+
+<script>
+    function checkUrl(url) {
+        if (!url || url.trim() === "") {
+            alert("No URL available for this song.");
+            return false; 
+        }
+        return true; 
+    }
+</script>

@@ -24,17 +24,14 @@ namespace MusicApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(List<string> GenreFilters, List<string> songNames, string searchTextName)
+        public async Task<IActionResult> Index(List<string> GenreFilters,string searchTextName, string searchTextCreator, string YearFilters)
         {
             ViewData["GenreFilters"] = GenreFilters;
             ViewData["SearchTextName"] = searchTextName;
+            ViewData["SearchTextCreator"] = searchTextCreator;
+            ViewData["YearFilters"] = YearFilters;
 
-            IQueryable<Song>? query = dbContext.Songs;
-
-            if (songNames != null && songNames.Any())
-            {
-                query = query.Where(p => songNames.Contains(p.Title));
-            }
+            IQueryable<Song>? query = dbContext.Songs;       
 
             if (GenreFilters != null && GenreFilters.Any())
             {
@@ -43,9 +40,19 @@ namespace MusicApp.Controllers
 
             if (!string.IsNullOrWhiteSpace(searchTextName))
             {
-                //query = query.Where(e => e.Name.Contains(searchTextName, StringComparison.OrdinalIgnoreCase));
                 var lowerSearch = searchTextName.ToLower();
                 query = query.Where(e => e.Title.ToLower().Contains(lowerSearch));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTextCreator))
+            {
+                var lowerSearch = searchTextCreator.ToLower();
+                query = query.Where(e => e.Creator.ToLower().Contains(lowerSearch));
+            }
+
+            if (!string.IsNullOrWhiteSpace(YearFilters))
+            {
+                query = query.Where(e => e.YearReleased == int.Parse(YearFilters));
             }
 
             var model = await query
@@ -57,7 +64,9 @@ namespace MusicApp.Controllers
                         YearReleased = p.YearReleased,
                         Duration = p.Duration,
                         Creator = p.Creator,
-                        Genre = p.Genre
+                        Genre = p.Genre,
+                        WikiURL = p.WikiURL ?? null,
+                        PlayURL = p.PlayURL ?? null
                     }).AsNoTracking().ToListAsync();
 
             return this.View(model);
@@ -86,7 +95,9 @@ namespace MusicApp.Controllers
                 Duration = model.Duration,
                 YearReleased = model.YearReleased,
                 Genre = model.Genre,
-                ImageURL = model.ImageURL
+                ImageURL = model.ImageURL,
+                WikiURL = model.WikiURL,
+                PlayURL = model.PlayURL
             };
 
             await dbContext.Songs.AddAsync(song);
@@ -95,7 +106,7 @@ namespace MusicApp.Controllers
             return this.RedirectToAction("Index");
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             var model = await dbContext.Songs.Where(p => p.Id == id).AsNoTracking().Select(p => new BasicSongViewModel
@@ -106,11 +117,13 @@ namespace MusicApp.Controllers
                 Duration = p.Duration,
                 YearReleased = p.YearReleased,
                 Genre = p.Genre,
-                Creator = p.Creator
+                Creator = p.Creator,
+                WikiURL = p.WikiURL,
+                PlayURL = p.PlayURL
             }).FirstOrDefaultAsync();
 
             return this.View(model);
-        }
+        }*/
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
@@ -122,7 +135,9 @@ namespace MusicApp.Controllers
                 Duration = p.Duration,
                 YearReleased = p.YearReleased,
                 Genre = p.Genre,
-                Creator = p.Creator
+                Creator = p.Creator,
+                WikiURL = p.WikiURL ?? null,
+                PlayURL = p.PlayURL ?? null
             }).FirstOrDefaultAsync();
 
             return this.View(model);
@@ -151,7 +166,9 @@ namespace MusicApp.Controllers
             song.YearReleased = model.YearReleased;
             song.Genre = model.Genre;
             song.ImageURL = model.ImageURL;
-            
+            song.WikiURL = model.WikiURL;
+            song.PlayURL = model.PlayURL;
+
             await dbContext.SaveChangesAsync();
 
             return this.RedirectToAction("Index");

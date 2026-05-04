@@ -9,5 +9,7 @@
             public string Genre{ get; set; } = null!;
             public string Creator { get; set; } = null!;
             public int Duration { get; set; }
+            public string? WikiURL { get; set; } 
+            public string? PlayURL { get; set; } 
     }
 }

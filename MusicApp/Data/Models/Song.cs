@@ -29,5 +29,7 @@ namespace MusicApp.Data.Models
 
         [Required]
         public string ImageURL { get; set; }
+        public string? WikiURL { get; set; }
+        public string? PlayURL { get; set; }
     }
 }

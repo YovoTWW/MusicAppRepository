@@ -15,5 +15,7 @@ namespace MusicApp.ViewModels
         public List<string> GenreList { get; set; } = MusicGenres;
         public string Creator { get; set; } = null!;
         public int Duration { get; set; }
+        public string? WikiURL { get; set; }
+        public string? PlayURL { get; set; } 
     }
 }
