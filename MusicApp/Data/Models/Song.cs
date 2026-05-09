@@ -26,9 +26,7 @@ namespace MusicApp.Data.Models
 
         [Required]
         public string Genre { get; set; }
-
-        [Required]
-        public string ImageURL { get; set; }
+        public string? ImageURL { get; set; }
         public string? WikiURL { get; set; }
         public string? PlayURL { get; set; }
     }

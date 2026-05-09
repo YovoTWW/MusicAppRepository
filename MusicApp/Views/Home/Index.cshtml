@@ -9,11 +9,12 @@
     ViewData["Title"] = "Songs List";
 }
 
-<link rel="stylesheet" href="~/css/card.css" />
+<link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
 
 <div>
-    <button><a asp-controller="Home" asp-action="Add" class="btn btn-info" >Add a new Song</a></button>
+    <button><a asp-controller="Home" asp-action="Add" title="Add a new song" class="btn btn-info">Add a new Song</a></button>
 </div>
+<br />
 
 <form method="get" class="mb-4" id="filters">
     <div class="row mb-2">
@@ -43,7 +44,7 @@
                    name="YearFilters"
                    class="form-control"
                    placeholder="Filter by Rlease Year"
-                   value="@searchTextCreator">
+                   value="@ViewData["YearFilters"]" />
         </div>
     </div>
 
@@ -81,7 +82,7 @@
         <div class="Song-Box">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">@song.Title</h5>
+                    <h2 class="card-title">@song.Title</h2>
 
                     <p class="card-text">
                         <strong>Artist:</strong> @song.Creator
@@ -102,30 +103,40 @@
                     <div class="Buttons-Div">
                         <a href="@song.WikiURL"
                            class="btn btn-info"
+                           title="Open the song Wikipedia page"
                            onclick="return checkUrl(@Html.Raw(Json.Serialize(song.WikiURL)))">
-                            Details
+                            <img class="icon-image" src="~/images/wikipedia-logo.png">
+                        </a>
+                        <a href="@song.PlayURL"
+                           class="btn btn-info"
+                           title="Open the song Youtube link"
+                           onclick="return checkUrl(@Html.Raw(Json.Serialize(song.PlayURL)))">
+                            <img class="icon-image" src="~/images/youtube-logo.png">
                         </a>
                         <a asp-controller="Home"
                            asp-action="Edit"
                            asp-route-id="@song.Id"
+                           title="Edit the information about the song"
                            class="btn btn-info">
                             Edit
                         </a>
-                        <a href="@song.PlayURL"
-                           class="btn btn-info"
-                           onclick="return checkUrl(@Html.Raw(Json.Serialize(song.PlayURL)))">
-                            Play Song
+                        <a asp-controller="Home"
+                           asp-action="Delete"
+                           asp-route-id="@song.Id"
+                           title="Delete the information about the song"
+                           class="btn btn-info">
+                            Delete
                         </a>
                     </div>
                 </div>
                 <div class="card-image">
                 @if (!string.IsNullOrEmpty(song.ImageURL))
                 {
-                    <img src="@song.ImageURL" class="card-img-top" alt="No Image Available">
+                    <img src="@song.ImageURL" class="song-image" alt="No Image Available">
                 }
                 else
                 {
-                    <img src="~/img/no-image-available-02.jpg" class="card-img-top" alt="No Image Available">
+                     <img src="~/img/no-image-available-02.jpg" class="song-image"  alt="No Image Available">
                 }
                 </div>
             </div>

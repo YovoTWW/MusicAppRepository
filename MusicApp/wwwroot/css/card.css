@@ -1,8 +1,8 @@
 .Song-Row {
     display: flex;
     flex-direction: row;
-    gap:50px;
-    flex-wrap:wrap;
+    gap: 50px;
+    flex-wrap: wrap;
 }
 
 .Song-Box {
@@ -14,20 +14,35 @@
     flex-direction: row;
     align-items: stretch;
     justify-content: center;
-    height: 350px;
+    height: 300px;
     width: 600px;
 }
 
-.card-body{
-    flex-grow:1;
+.card-body {
+    flex: 1;
 }
 
 .card-image {
     width: 300px;
     height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-width: 300px;
+    min-height: 300px;
     overflow: hidden;
+    flex-shrink: 0;
+}
+
+.song-image {
+    width: 300px !important;
+    height: 300px !important;
+    min-width: 300px;
+    min-height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.icon-image {
+    max-width: 24px;
+    max-height: 24px;
+    object-fit: contain;
 }
 

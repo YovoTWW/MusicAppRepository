@@ -106,25 +106,6 @@ namespace MusicApp.Controllers
             return this.RedirectToAction("Index");
         }
 
-        /*[HttpGet]
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var model = await dbContext.Songs.Where(p => p.Id == id).AsNoTracking().Select(p => new BasicSongViewModel
-            {
-                Id = p.Id,               
-                ImageURL = p.ImageURL,
-                Title = p.Title,
-                Duration = p.Duration,
-                YearReleased = p.YearReleased,
-                Genre = p.Genre,
-                Creator = p.Creator,
-                WikiURL = p.WikiURL,
-                PlayURL = p.PlayURL
-            }).FirstOrDefaultAsync();
-
-            return this.View(model);
-        }*/
-
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -170,6 +151,34 @@ namespace MusicApp.Controllers
             song.PlayURL = model.PlayURL;
 
             await dbContext.SaveChangesAsync();
+
+            return this.RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var model = await dbContext.Songs.Where(p => p.Id == id).AsNoTracking().Select(p => new DeleteSongViewModel
+            {
+                Id = p.Id,
+                Title = p.Title
+            }).FirstOrDefaultAsync();
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteSongViewModel model)
+        {
+            Song? song = await dbContext.Songs.Where(p => p.Id == model.Id).FirstOrDefaultAsync();
+
+            if (song != null)
+            {
+
+                dbContext.Songs.Remove(song);
+
+                await dbContext.SaveChangesAsync();
+            }
 
             return this.RedirectToAction("Index");
         }
